@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pod
+  labels:
+    app: debug
+    purpose: troubleshooting
+spec:
+  containers:
+  - name: debug
+    image: ghcr.io/YOUR_USERNAME/dpod:latest
+    command: ["/bin/bash"]
+    args: ["-c", "sleep infinity"]
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
+    securityContext:
+      # Run as non-root user for security
+      runAsNonRoot: false
+      runAsUser: 0
+      # Required for some network tools like tcpdump
+      capabilities:
+        add:
+        - NET_ADMIN
+        - NET_RAW
+  restartPolicy: Never
